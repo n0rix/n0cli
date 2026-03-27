@@ -4,9 +4,11 @@ import random
 import string
 from datetime import datetime
 
+__version__ = "v0.1.1"
+
 
 def hello():
-    print("hello from n0cli")
+    print(f"hello from n0cli {__version__}")
 
 
 def time():
