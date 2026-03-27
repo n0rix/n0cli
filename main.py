@@ -4,7 +4,7 @@ import random
 import string
 from datetime import datetime
 
-__version__ = "v0.1.1"
+__version__ = "v1.0.0"
 
 
 def hello():
@@ -13,6 +13,10 @@ def hello():
 
 def time():
     print(datetime.now())
+
+
+def version():
+    print(f"n0cli version: {__version__}")
 
 
 def hash_text(text):
@@ -26,42 +30,46 @@ def gen(length):
     print(result)
 
 
-def main():
-    parser = argparse.ArgumentParser(prog="n0cli", description="simple CLI tools")
+def run_interactive():
+    print(f"n0CLI [{__version__}]")
 
-    subparsers = parser.add_subparsers(dest="command")
+    while True:
+        cmd_input = input("n0cli CMD > ").strip()
 
-    # hello command
-    subparsers.add_parser("hello")
+        # continue, if input is empty
+        if not cmd_input:
+            continue
 
-    # time command
-    subparsers.add_parser("time")
+        #  exit check
+        if cmd_input.lower() in ["exit", "quit"]:
+            print("Exiting n0cli ... Bye")
+            break
 
-    # hash command
-    hash_parser = subparsers.add_parser("hash")
-    hash_parser.add_argument("text")
+        # split string into command + args
+        parts = cmd_input.split()
+        cmd = parts[0].lower()
+        args = parts[1:]
 
-    # gen command
-    gen_parser = subparsers.add_parser("gen")
-    gen_parser.add_argument("length", type=int, nargs="?", default=8)
-
-    args = parser.parse_args()
-
-    if args.command == "hello":
-        hello()
-
-    elif args.command == "time":
-        time()
-
-    elif args.command == "hash":
-        hash_text(args.text)
-
-    elif args.command == "gen":
-        gen(args.length)
-
-    else:
-        parser.print_help()
+        # dispatch commands
+        if cmd == "hello":
+            hello()
+        elif cmd == "version":
+            version()
+        elif cmd == "time":
+            time()
+        elif cmd == "hash":
+            if args:
+                hash_text(" ".join(args))
+            else:
+                print("No arguments provided. Usage: hash <text>")
+        elif cmd == "gen":
+            if args and args[0].isdigit():
+                gen(int(args[0]))
+            else:
+                print("No arguments provided. Usage: gen <length>")
+        else:
+            print(f"Unknown command: {cmd}")
 
 
 if __name__ == "__main__":
-    main()
+    run_interactive()
